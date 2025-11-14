@@ -1,68 +1,107 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nạp Thẻ SAMP VIP</title>
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 25px rgba(0,0,0,0.5);
-      width: 350px;
-      text-align: center;
-    }
-    h2 {
-      color: #00ffff;
-      margin-bottom: 15px;
-    }
-    select, input, button {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      background: #2c2c3c;
-      color: white;
-    }
-    button {
-      background: #00bfff;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #0080ff;
-    }
-    .success {
-      color: #00ff99;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    .error {
-      color: #ff4d4d;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nạp Thẻ SAMP VIP — Neon UI</title>
+<style>
+  :root{
+    --bg1:#0f0c29; --bg2:#302b63; --accent1:#00f5ff; --accent2:#8a2be2;
+    --glass: rgba(255,255,255,0.04);
+  }
+  html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Roboto, Arial;}
+  body{
+    background: linear-gradient(135deg,var(--bg1),var(--bg2));
+    display:flex;align-items:center;justify-content:center;padding:28px;
+    color:#e6eef8;
+  }
+
+  .wrap{
+    width:100%;max-width:1100px;display:grid;grid-template-columns: 460px 1fr;gap:22px;
+  }
+
+  /* Left: Form */
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border-radius:18px;padding:20px;box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.04);
+    position:relative; overflow:hidden;
+  }
+  .card:before{
+    content:"";position:absolute;inset:-40% -20% auto -20%;height:200px;
+    background: linear-gradient(90deg, rgba(0,245,255,0.06), rgba(138,43,226,0.06));
+    transform: rotate(-12deg);
+    pointer-events:none;
+  }
+
+  h1{margin:0 0 10px;font-size:20px;letter-spacing:0.6px;color:var(--accent1);text-shadow:0 2px 12px rgba(0,245,255,0.06);}
+  .sub{font-size:13px;color:#bcd6ff;margin-bottom:12px;}
+
+  .field{display:block;margin:10px 0;}
+  select,input{width:100%;padding:12px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#eaf6ff;font-size:14px;outline:none;box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);}
+  .row{display:flex;gap:10px;}
+  .row .half{flex:1;}
+
+  .btn{
+    margin-top:12px;padding:12px 14px;border-radius:12px;border:none;cursor:pointer;
+    font-weight:700;font-size:15px;color:#08202a;
+    background: linear-gradient(90deg,var(--accent1),#66f);
+    box-shadow: 0 8px 28px rgba(102,51,255,0.18), 0 1px 0 rgba(255,255,255,0.04) inset;
+    transition: transform .12s ease, box-shadow .12s;
+  }
+  .btn:active{transform:translateY(2px);}
+
+  /* Loading */
+  .loading{display:none;margin-top:12px;justify-content:center;gap:8px;}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--accent1);animation:jump .7s infinite;}
+  .dot:nth-child(2){animation-delay:.12s}
+  .dot:nth-child(3){animation-delay:.24s}
+  @keyframes jump{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+
+  /* Right: history & summary */
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius:18px;padding:18px;border:1px solid rgba(255,255,255,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+  }
+  .panel h2{margin:0 0 8px;color:var(--accent2);font-size:16px}
+  .stats{display:flex;gap:12px;margin-bottom:12px;}
+  .stat{flex:1;padding:10px;border-radius:12px;background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);text-align:center;}
+  .stat .big{font-weight:800;font-size:18px;color:var(--accent1)}
+
+  /* history table */
+  table{width:100%;border-collapse:collapse;color:#dff0ff;font-size:13px;}
+  th,td{padding:8px 6px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:left}
+  th{color:#9fc8ff;font-size:12px;font-weight:700}
+  .small{font-size:12px;color:#9fb4d9}
+
+  .actions{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:10px}
+  .link{color:var(--accent1);cursor:pointer;font-weight:700}
+
+  /* popup overlay */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:9999}
+  .modal{background:#ffffff; color:#04202a;padding:18px;border-radius:12px;width:320px;text-align:center; animation:pop .22s ease}
+  .modal.success{border-left:6px solid #00d084}
+  .modal.error{border-left:6px solid #ff4d6d}
+  @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* neon accents on labels */
+  label{display:block;margin-bottom:6px;color:#bfefff;font-weight:600;text-shadow:0 4px 18px rgba(0,245,255,0.06)}
+  .hint{font-size:12px;color:#a9c7ff;margin-top:6px}
+
+  /* responsive */
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr;max-width:720px}
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>💳 NẠP THẺ SAMP VIP</h2>
 
+<div class="wrap">
+  <div class="card">
+    <h1>⚡ NẠP THẺ SAMP VIP</h1>
+    <div class="sub">Gửi thông tin nhanh tới Admin — Duyệt Siêu Nhanh</div>
+
+    <label>Loại thẻ</label>
     <select id="cardType">
       <option value="">-- Chọn loại thẻ --</option>
       <option value="Viettel">Viettel</option>
@@ -70,74 +109,285 @@
       <option value="Vinaphone">Vinaphone</option>
     </select>
 
-    <select id="amount">
-      <option value="">-- Chọn mệnh giá --</option>
-      <option value="10,000 VNĐ">10,000 VNĐ</option>
-      <option value="20,000 VNĐ">20,000 VNĐ</option>
-      <option value="100,000 VNĐ">100,000 VNĐ</option>
-      <option value="200,000 VNĐ">200,000 VNĐ</option>
-    </select>
+    <div class="row">
+      <div class="half">
+        <label>Mệnh giá</label>
+        <select id="amount">
+          <option value="">-- Chọn mệnh giá --</option>
+          <option value="10000">10,000 VNĐ</option>
+          <option value="20000">20,000 VNĐ</option>
+          <option value="100000">100,000 VNĐ</option>
+          <option value="200000">200,000 VNĐ</option>
+        </select>
+      </div>
+      <div class="half">
+        <label>Vật phẩm nhận</label>
+        <select id="item">
+          <option value="">-- Chọn vật phẩm --</option>
+          <option value="Coin">Coin</option>
+          <option value="SAD MONEY">SAD MONEY</option>
+          <option value="VIP GOLD 7 NGÀY">VIP GOLD 7 NGÀY</option>
+          <option value="VIP GOLD 30 NGÀY">VIP GOLD 30 NGÀY</option>
+          <option value="House">House</option>
+        </select>
+      </div>
+    </div>
 
-    <select id="item">
-      <option value="">-- Chọn vật phẩm --</option>
-      <option value="Coin">Coin</option>
-      <option value="SAD MONEY">SAD MONEY</option>
-      <option value="VIP GOLD 7 NGÀY">VIP GOLD 7 NGÀY</option>
-      <option value="VIP GOLD 30 NGÀY">VIP GOLD 30 NGÀY</option>
-      <option value="House">House</option>
-    </select>
+    <label>Seri</label>
+    <input id="serial" placeholder="Nhập Seri thẻ">
 
-    <input type="text" id="serial" placeholder="Nhập Seri Thẻ">
-    <input type="text" id="code" placeholder="Nhập Mã Thẻ">
-    <input type="text" id="player" placeholder="Tên nhân vật SAMP">
-    <button onclick="sendToDiscord()">Gửi Nạp Thẻ</button>
-    <p id="status"></p>
+    <label>Mã thẻ</label>
+    <input id="code" placeholder="Nhập Mã thẻ">
+
+    <label>Tên nhân vật SAMP</label>
+    <input id="player" placeholder="Tên nhân vật">
+
+    <div style="display:flex;gap:10px;margin-top:12px;align-items:center;">
+      <button class="btn" id="sendBtn">Gửi Nạp Thẻ</button>
+      <div class="loading" id="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+
+    <div class="hint">Lưu ý: Nhập Đúng Thông Tin Thẻ Để Không Mất Tiền.</div>
   </div>
 
-  <script>
-    async function sendToDiscord() {
-      const type = document.getElementById("cardType").value;
-      const amount = document.getElementById("amount").value;
-      const item = document.getElementById("item").value;
-      const serial = document.getElementById("serial").value;
-      const code = document.getElementById("code").value;
-      const player = document.getElementById("player").value;
-      const status = document.getElementById("status");
+  <!-- RIGHT: Summary + History -->
+  <div class="panel">
+    <h2>📊 Thông tin & Lịch sử</h2>
+    <div class="stats">
+      <div class="stat"><div class="small">Tổng nạp</div><div class="big" id="totalAmount">0 VNĐ</div></div>
+      <div class="stat"><div class="small">Tổng Coin</div><div class="big" id="totalCoin">0</div></div>
+      <div class="stat"><div class="small">Lần nạp</div><div class="big" id="totalCount">0</div></div>
+    </div>
 
-      if (!type || !serial || !code || !player || !amount || !item) {
-        status.innerHTML = "⚠️ Vui lòng nhập đầy đủ thông tin!";
-        status.className = "error";
-        return;
-      }
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="small">Lịch sử nạp (local)</div>
+      <div class="actions">
+        <span class="link" id="clearHistory">Xóa lịch sử</span>
+      </div>
+    </div>
 
-      status.innerHTML = "⏳ Đang gửi...";
-      status.className = "";
+    <div style="margin-top:10px;max-height:480px;overflow:auto;">
+      <table id="historyTable">
+        <thead>
+          <tr><th>Thời gian</th><th>Người</th><th>Mệnh giá</th><th>Quà</th><th>Coin</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-      const webhookURL = "https://discord.com/api/webhooks/1438616148932563146/Q3Mgza8MmeEohlBfF0oFmL-pQr7cLbp2ix-UsScbPG_G8ZTdnz2iERcOm7yFtnmOLUnW";
+    <div style="margin-top:14px;font-size:13px;color:#b9d2ff">
+      <strong>Ghi chú:</strong> 10k→100Coin,20k→250Coin,100k→1000Coin+VIP3,200k→2000Coin+VIP7.
+    </div>
+  </div>
+</div>
 
-      const payload = {
-        content: `💳 **NẠP THẺ SAMP VIP**\n👤 Người chơi: **${player}**\n🏷️ Loại thẻ: **${type}**\n💰 Mệnh giá: **${amount}**\n🎁 Vật phẩm: **${item}**\n🔢 Seri: **${serial}**\n💳 Mã thẻ: **${code}**\n🕒 Thời gian: ${new Date().toLocaleString()}`
+<!-- Popup overlay -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalBox">
+    <h3 id="modalTitle">...</h3>
+    <p id="modalMsg"></p>
+  </div>
+</div>
+
+<script>
+/* ========== CONFIG ========== */
+const WEBHOOK = "https://discord.com/api/webhooks/1438616148932563146/Q3Mgza8MmeEohlBfF0oFmL-pQr7cLbp2ix-UsScbPG_G8ZTdnz2iERcOm7yFtnmOLUnW";
+/* image thumbnails (public URLs) */
+const THUMB_URL = "https://cdn.discordapp.com/attachments/1395027246355583098/1434302112925225066/1761135397635.jpg?ex=6918502f&is=6916feaf&hm=1f4a94a99fb7f9f972b019fce2bf84a118f63a87862e5e120cef5a60f10374d2&";
+const IMAGE_URL = "https://cdn.discordapp.com/attachments/1395027246355583098/1434302112925225066/1761135397635.jpg?ex=6918502f&is=6916feaf&hm=1f4a94a99fb7f9f972b019fce2bf84a118f63a87862e5e120cef5a60f10374d2&";
+/* spam limit (ms) */
+const SPAM_LIMIT = 5 * 60 * 1000;
+/* history localStorage key */
+const KEY_HISTORY = "samp_topup_history_v1";
+/* reward rules (default accepted) */
+function computeRewards(amount){
+  /* amount given as number in VND */
+  if(amount === 10000) return {coin:100, vip:null};
+  if(amount === 20000) return {coin:250, vip:null};
+  if(amount === 100000) return {coin:2000, vip:"VIP GOLD 7 NGÀY"};
+  if(amount === 200000) return {coin:5000, vip:"VIP GOLD 30 NGÀY"};
+  // fallback: coin = amount/100
+  return {coin: Math.floor(amount/100), vip:null};
+}
+
+/* ========== UI helpers ========== */
+function showModal(type, title, msg){
+  const overlay = document.getElementById("overlay");
+  const box = document.getElementById("modalBox");
+  overlay.style.display = "flex";
+  box.className = "modal " + (type === "success" ? "success" : "error");
+  document.getElementById("modalTitle").innerText = title;
+  document.getElementById("modalMsg").innerText = msg;
+  overlay.onclick = ()=> overlay.style.display = "none";
+}
+
+/* ========== History management ========== */
+function loadHistory(){
+  const raw = localStorage.getItem(KEY_HISTORY);
+  if(!raw) return [];
+  try{return JSON.parse(raw)||[];}catch(e){return [];}
+}
+function saveHistory(arr){
+  localStorage.setItem(KEY_HISTORY, JSON.stringify(arr));
+}
+function addHistory(entry){
+  const arr = loadHistory();
+  arr.unshift(entry); // newest first
+  saveHistory(arr);
+  renderHistory();
+}
+function clearHistory(){
+  if(confirm("Xóa toàn bộ lịch sử nạp (local)?")) {
+    localStorage.removeItem(KEY_HISTORY);
+    renderHistory();
+  }
+}
+function renderHistory(){
+  const arr = loadHistory();
+  const tbody = document.querySelector("#historyTable tbody");
+  tbody.innerHTML = "";
+  let totalAmount = 0, totalCoin = 0;
+  arr.forEach(row=>{
+    totalAmount += Number(row.amount);
+    totalCoin += Number(row.coin);
+    const tr = document.createElement("tr");
+    const d = new Date(row.time).toLocaleString();
+    tr.innerHTML = `<td class="small">${d}</td>
+                    <td>${escapeHtml(row.player)}</td>
+                    <td>${formatVND(row.amount)}</td>
+                    <td>${escapeHtml(row.item || "-")}${row.vip ? " <span class='small' style='color:#ffd27a'>("+escapeHtml(row.vip)+")</span>" : ""}</td>
+                    <td>${row.coin}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("totalAmount").innerText = formatVND(totalAmount);
+  document.getElementById("totalCoin").innerText = totalCoin;
+  document.getElementById("totalCount").innerText = arr.length;
+}
+
+/* ========== Utilities ========== */
+function formatVND(n){ return new Intl.NumberFormat('vi-VN').format(Number(n)) + " VNĐ"; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+/* ========== Anti-spam (localStorage) ========== */
+function isSpam(){
+  const last = localStorage.getItem("last_submit_time");
+  if(!last) return false;
+  const now = Date.now();
+  return (now - Number(last) < SPAM_LIMIT);
+}
+function setSubmitTime(){ localStorage.setItem("last_submit_time", Date.now()); }
+
+/* ========== Sending to Discord ========== */
+async function sendWebhook(payload){
+  // fetch to webhook
+  return fetch(WEBHOOK, {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  });
+}
+
+/* ========== Main logic ========== */
+document.getElementById("sendBtn").addEventListener("click", async ()=>{
+  if(isSpam()){
+    const wait = Math.ceil((SPAM_LIMIT - (Date.now() - Number(localStorage.getItem("last_submit_time"))))/1000);
+    showModal("error","⛔ Hạn chế Spam","Bạn phải chờ "+wait+" giây trước khi gửi lại.");
+    return;
+  }
+
+  const cardType = document.getElementById("cardType").value.trim();
+  const amountVal = Number(document.getElementById("amount").value);
+  const item = document.getElementById("item").value.trim();
+  const serial = document.getElementById("serial").value.trim();
+  const code = document.getElementById("code").value.trim();
+  const player = document.getElementById("player").value.trim();
+
+  if(!cardType || !amountVal || !item || !serial || !code || !player){
+    showModal("error","Thiếu thông tin","Vui lòng điền đầy đủ tất cả các trường.");
+    return;
+  }
+
+  // compute rewards
+  const rewards = computeRewards(amountVal);
+  const coin = rewards.coin;
+  const vip = rewards.vip || null;
+
+  // show loading
+  document.getElementById("loading").style.display = "flex";
+  document.getElementById("sendBtn").disabled = true;
+
+  // prepare payload with embed + image
+  const embed = {
+    title: "💳 NẠP THẺ SAMP VIP",
+    color: 5763719,
+    thumbnail: { url: THUMB_URL },
+    fields: [
+      { name: "👤 Người chơi", value: player, inline: true },
+      { name: "🏷 Loại thẻ", value: cardType, inline: true },
+      { name: "💰 Mệnh giá", value: formatVND(amountVal), inline: true },
+      { name: "🎁 Vật phẩm", value: item, inline: true },
+      { name: "🔢 Seri", value: serial, inline: false },
+      { name: "💳 Mã thẻ", value: code, inline: false },
+      { name: "🏆 Coin nhận", value: String(coin), inline: true },
+    ],
+    footer: { text: "Thời gian: " + new Date().toLocaleString() }
+  };
+  if(vip) embed.fields.push({ name: "💎 VIP", value: vip, inline: true });
+  // attach large image
+  embed.image = { url: IMAGE_URL };
+
+  const payload = { content: `Nạp thẻ từ web - ${player}`, embeds: [embed] };
+
+  try{
+    const resp = await sendWebhook(payload);
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("sendBtn").disabled = false;
+
+    if(resp.ok){
+      // save history locally
+      const entry = {
+        time: Date.now(),
+        player,
+        cardType,
+        amount: amountVal,
+        item,
+        serial,
+        code,
+        coin,
+        vip
       };
-
-      try {
-        const response = await fetch(webhookURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          status.innerHTML = "✅ Gửi thành công! Vui lòng chờ admin xử lý.";
-          status.className = "success";
-        } else {
-          status.innerHTML = "❌ Lỗi khi gửi đến Discord!";
-          status.className = "error";
-        }
-      } catch (error) {
-        status.innerHTML = "⚠️ Không thể kết nối Discord!";
-        status.className = "error";
-      }
+      addHistory(entry);
+      setSubmitTime();
+      showModal("success","✅ Gửi thành công","Thông tin đã gửi tới Admin. Cảm ơn!");
+      // reset form (keep player for convenience)
+      document.getElementById("serial").value = "";
+      document.getElementById("code").value = "";
+      // optionally preselect default item based on amount
+    } else {
+      showModal("error","❌ Lỗi gửi","Discord trả lỗi: HTTP " + resp.status);
     }
-  </script>
+  }catch(err){
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("sendBtn").disabled = false;
+    showModal("error","⚠️ Lỗi kết nối","Không thể kết nối tới Discord (mạng hoặc CORS).");
+    console.error(err);
+  }
+});
+
+/* Clear history button */
+document.getElementById("clearHistory").addEventListener("click", clearHistory);
+
+/* initialize */
+renderHistory();
+
+/* optional: auto-fill item when amount selected */
+document.getElementById("amount").addEventListener("change", ()=>{
+  const v = Number(document.getElementById("amount").value);
+  if(v === 10000) document.getElementById("item").value = "Coin";
+  else if(v === 20000) document.getElementById("item").value = "Coin";
+  else if(v === 100000) document.getElementById("item").value = "VIP GOLD 7 NGÀY";
+  else if(v === 200000) document.getElementById("item").value = "VIP GOLD 30 NGÀY";
+});
+</script>
 </body>
   </html>
